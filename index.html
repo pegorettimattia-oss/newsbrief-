@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsBrief - Notizie & Territorio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0B0F19;
+            --bg-card: #151C2C;
+            --primary: #6366F1;
+            --primary-glow: rgba(99, 102, 241, 0.25);
+            --accent: #8B5CF6;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #1E293B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15), transparent 70%);
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 430px;
+            min-height: 100vh;
+            background: var(--bg-main);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding-bottom: 90px;
+        }
+
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(11, 15, 25, 0.85);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-location {
+            background: rgba(99, 102, 241, 0.15);
+            color: #A5B4FC;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        main {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tab-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tab-content.hidden {
+            display: none;
+        }
+
+        /* Location Selector Card */
+        .location-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .location-header {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .select-input {
+            width: 100%;
+            padding: 12px;
+            background: #0F172A;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+        }
+
+        /* Topics Grid */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .topic-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .topic-chip.active {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.15);
+        }
+
+        .topic-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .checkbox-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--text-muted);
+        }
+
+        .topic-chip.active .checkbox-dot {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Audio Player Widget */
+        .audio-widget {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .audio-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .play-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* News Cards */
+        .news-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-tag {
+            align-self: flex-start;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .tag-crime { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; }
+        .tag-tech { background: rgba(99, 102, 241, 0.2); color: #818CF8; }
+        .tag-world { background: rgba(245, 158, 11, 0.2); color: #FBBF24; }
+        .tag-local { background: rgba(16, 185, 129, 0.2); color: #34D399; }
+
+        .news-headline {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .summary-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .summary-list li {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            position: relative;
+            padding-left: 18px;
+        }
+
+        .summary-list li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 18px;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 430px;
+            background: rgba(11, 15, 25, 0.95);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-container">
+    <header>
+        <div class="brand">
+            <div class="brand-logo">N</div>
+            <div class="brand-name">NewsBrief</div>
+        </div>
+        <div class="badge-location" id="currentLocationBadge">
+            📍 Roma (RM)
+        </div>
+    </header>
+
+    <main>
+        <!-- TAB 1: NOTIZIE OGGI -->
+        <div id="tab-today" class="tab-content">
+            <div class="audio-widget">
+                <div class="audio-title">
+                    <div>
+                        <h3 style="font-size: 15px;">Briefing Audio Personalizzato</h3>
+                        <div style="font-size: 12px; color: var(--text-muted);">2 Minuti • Sintesi IA Notizie di Oggi</div>
+                    </div>
+                    <span style="font-size: 20px;">🎧</span>
+                </div>
+                <div class="audio-controls">
+                    <button class="play-btn" id="playBtn">▶</button>
+                    <div style="font-size: 12px; color: var(--text-muted);">Tocca per ascoltare il riassunto vocale</div>
+                </div>
+            </div>
+
+            <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">Le tue notizie filtrate</div>
+
+            <div class="news-card">
+                <span class="card-tag tag-crime">Cronaca & Sicurezza</span>
+                <div class="news-headline">Controlli straordinari nel centro cittadino e nuovo piano viabilità</div>
+                <ul class="summary-list">
+                    <li>Aumentati i pattugliamenti serali nelle zone a maggiore affluenza per la sicurezza locale.</li>
+                    <li>Previste deviazioni del traffico nel weekend per consentire lavori di rifacimento stradale.</li>
+                </ul>
+                <div class="card-footer">
+                    <span>Fonte: <b>Cronaca Locale</b></span>
+                    <span>15 min fa</span>
+                </div>
+            </div>
+
+            <div class="news-card">
+                <span class="card-tag tag-world">Geopolitica</span>
+                <div class="news-headline">Sviluppi sui vertici internazionali ed impatti sull'energia</div>
+                <ul class="summary-list">
+                    <li>Raggiunti nuovi accordi preliminari sulle forniture di gas ed energia pulita.</li>
+                    <li>Gli analisti prevedono stabilità dei prezzi nei prossimi mesi invernali.</li>
+                </ul>
+                <div class="card-footer">
+                    <span>Fonte: <b>Ansa / Reuters</b></span>
+                    <span>1 ora fa</span>
+                </div>
+            </div>
+
+            <div class="news-card">
+                <span class="card-tag tag-local">Bandi & Comune</span>
+                <div class="news-headline">Aperte le iscrizioni al bando comunale per contributi alle famiglie</div>
+                <ul class="summary-list">
+                    <li>Fondi disponibili per il sostegno alle spese scolastiche e trasporti.</li>
+                    <li>Domande presentabili online sul portale del comune fino al mese prossimo.</li>
+                </ul>
+                <div class="card-footer">
+                    <span>Fonte: <b>Albo Pretorio</b></span>
+                    <span>3 ore fa</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: SELEZIONE TERRITORIO E FILTRI -->
+        <div id="tab-filters" class="tab-content hidden">
+            <div class="location-card">
+                <div class="location-header">📍 Seleziona il tuo Territorio</div>
+                <select class="select-input" id="citySelect">
+                    <option value="Roma (RM)">Roma e Provincia</option>
+                    <option value="Milano (MI)">Milano e Provincia</option>
+                    <option value="Napoli (NA)">Napoli e Provincia</option>
+                    <option value="Torino (TO)">Torino e Provincia</option>
+                    <option value="Bologna (BO)">Bologna e Provincia</option>
+                    <option value="Firenze (FI)">Firenze e Provincia</option>
+                    <option value="Tutte">Nazionale (Tutta Italia)</option>
+                </select>
+            </div>
+
+            <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">Scegli i temi che vuoi seguire</div>
+
+            <div class="topics-grid">
+                <div class="topic-chip active" onclick="toggleTopic(this)">
+                    <div class="topic-info"><span>🚨</span> Cronaca</div>
+                    <div class="checkbox-dot"></div>
+                </div>
+                <div class="topic-chip active" onclick="toggleTopic(this)">
+                    <div class="topic-info"><span>🌍</span> Geopolitica</div>
+                    <div class="checkbox-dot"></div>
+                </div>
+                <div class="topic-chip active" onclick="toggleTopic(this)">
+                    <div class="topic-info"><span>🏛️</span> Bandi Locali</div>
+                    <div class="checkbox-dot"></div>
+                </div>
+                <div class="topic-chip active" onclick="toggleTopic(this)">
+                    <div class="topic-info"><span>💼</span> Economia</div>
+                    <div class="checkbox-dot"></div>
+                </div>
+                <div class="topic-chip" onclick="toggleTopic(this)">
+                    <div class="topic-info"><span>💻</span> Tecnologia</div>
+                    <div class="checkbox-dot"></div>
+                </div>
+                <div class="topic-chip" onclick="toggleTopic(this)">
+                    <div class="topic-info"><span>⚽</span> Sport Locale</div>
+                    <div class="checkbox-dot"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav>
+        <a class="nav-item active" onclick="switchTab('today', this)">
+            <span class="nav-icon">📰</span>
+            Oggi
+        </a>
+        <a class="nav-item" onclick="switchTab('filters', this)">
+            <span class="nav-icon">⚙️</span>
+            Filtri & Zona
+        </a>
+    </nav>
+</div>
+
+<script>
+    function switchTab(tabName, el) {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        
+        if(tabName === 'today') {
+            document.getElementById('tab-today').classList.remove('hidden');
+            document.getElementById('tab-filters').classList.add('hidden');
+        } else {
+            document.getElementById('tab-today').classList.add('hidden');
+            document.getElementById('tab-filters').classList.remove('hidden');
+        }
+    }
+
+    function toggleTopic(el) {
+        el.classList.toggle('active');
+    }
+
+    document.getElementById('citySelect').addEventListener('change', function(e) {
+        document.getElementById('currentLocationBadge').innerText = '📍 ' + e.target.value;
+    });
+
+    const playBtn = document.getElementById('playBtn');
+    let isPlaying = false;
+    playBtn.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        playBtn.innerText = isPlaying ? "❚❚" : "▶";
+    });
+</script>
+
+</body>
+</html>
